@@ -3,6 +3,7 @@ package com.tictactoe;
 import com.tictactoe.model.*;
 import com.tictactoe.service.Game;
 import com.tictactoe.strategy.OrderOneWinningStrategy;
+import com.tictactoe.factory.PlayerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,10 @@ public class TicTacToeDemo {
         System.out.println("Starting Tic Tac Toe...");
 
         // 1. Setup Players (Bot vs Bot for auto-demo)
+        // 1. Setup Players using Factory
         List<Player> players = new ArrayList<>();
-        players.add(new BotPlayer("Bot-X", Symbol.X));
-        players.add(new BotPlayer("Bot-O", Symbol.O));
+        players.add(PlayerFactory.createPlayer(PlayerType.BOT, "Bot-X", Symbol.X));
+        players.add(PlayerFactory.createPlayer(PlayerType.BOT, "Bot-O", Symbol.O));
 
         // 2. Setup Game
         Game game = new Game(3, players, new OrderOneWinningStrategy(3));
