@@ -1,0 +1,16 @@
+src/com/chess/ChessDemo.java
+src/com/chess/model/PieceType.java
+src/com/chess/model/Player.java
+src/com/chess/model/GameStatus.java
+src/com/chess/model/Move.java
+src/com/chess/model/Cell.java
+src/com/chess/model/Color.java
+src/com/chess/service/Game.java
+src/com/chess/service/Board.java
+src/com/chess/piece/Knight.java
+src/com/chess/piece/Rook.java
+src/com/chess/piece/Bishop.java
+src/com/chess/piece/Queen.java
+src/com/chess/piece/King.java
+src/com/chess/piece/Piece.java
+src/com/chess/piece/Pawn.java

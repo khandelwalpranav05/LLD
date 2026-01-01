@@ -1,0 +1,12 @@
+src/com/coffeemachine/decorator/Milk.java
+src/com/coffeemachine/decorator/CondimentDecorator.java
+src/com/coffeemachine/decorator/Sugar.java
+src/com/coffeemachine/state/DispensingState.java
+src/com/coffeemachine/state/MachineState.java
+src/com/coffeemachine/state/PaymentState.java
+src/com/coffeemachine/state/IdleState.java
+src/com/coffeemachine/model/Espresso.java
+src/com/coffeemachine/model/Beverage.java
+src/com/coffeemachine/service/Inventory.java
+src/com/coffeemachine/service/CoffeeMachine.java
+src/com/coffeemachine/CoffeeMachineDemo.java
