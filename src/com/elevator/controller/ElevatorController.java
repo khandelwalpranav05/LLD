@@ -29,6 +29,11 @@ public class ElevatorController {
         }
         return instance;
     }
+    
+    // For testing - reset singleton
+    public static synchronized void resetInstance() {
+        instance = null;
+    }
 
     public void requestElevator(int source, int destination) {
         Request req = new Request(source, destination);

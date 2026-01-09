@@ -70,10 +70,12 @@ public class SplitwiseDemo {
         
         // ============ 7. SETTLE UP ============
         System.out.println("\n=== Settlement ===");
-        // Bob settles $40 with Alice
-        service.settleUp(bob, alice, 40.0);
+        // At this point: Alice owes Bob $10, Alice owes Carol $60, Bob owes Carol $40
+        // Alice pays Bob $10 to settle her debt with Bob
+        System.out.println("Before settlement: Alice owes Bob $10");
+        service.settleUp(alice, bob, 10.0);  // Alice pays Bob $10
         
-        System.out.println("\n=== Balances After Settlement ===");
+        System.out.println("\n=== Balances After Settlement (Alice-Bob should be 0) ===");
         service.printBalances("u1");
         service.printBalances("u2");
         

@@ -18,11 +18,19 @@ public class PaymentState implements MachineState {
     @Override
     public void insertMoney(double amount) {
         machine.addBalance(amount);
-        System.out.println("Inserted: $" + amount + ". Total: $" + machine.getCurrentBalance());
+        double balance = machine.getCurrentBalance();
+        double cost = machine.getCurrentBeverage().getCost();
         
-        if (machine.getCurrentBalance() >= machine.getCurrentBeverage().getCost()) {
+        System.out.println("Inserted: $" + amount + ". Total: $" + balance);
+        
+        if (balance >= cost) {
+            // Enough money - proceed to dispense
             machine.setState(machine.getDispensingState());
-            machine.dispense(); // Auto-trigger dispense
+            machine.dispense();
+        } else {
+            // Not enough - tell user how much more is needed
+            double remaining = cost - balance;
+            System.out.println("Please insert $" + String.format("%.2f", remaining) + " more.");
         }
     }
 

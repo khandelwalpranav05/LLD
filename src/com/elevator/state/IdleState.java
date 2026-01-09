@@ -7,21 +7,28 @@ import com.elevator.model.Request;
 public class IdleState implements ElevatorState {
     @Override
     public void move(Elevator elevator) {
-        if (elevator.getPendingRequests().isEmpty()) {
-            System.out.println("Elevator " + elevator.getId() + " is Idle. No requests.");
-            return;
+        if (!elevator.hasRequests()) {
+            return;  // Stay idle
         }
 
-        Request nextReq = elevator.getPendingRequests().get(0);
-        if (nextReq.getSourceFloor() > elevator.getCurrentFloor()) {
-            System.out.println("Elevator " + elevator.getId() + " starting UP.");
+        // First, check if anyone at current floor needs pickup
+        if (elevator.shouldStopAt(elevator.getCurrentFloor())) {
+            elevator.openDoors();
+        }
+
+        // Decide direction based on pending requests
+        // LOOK algorithm: continue in same direction if possible
+        if (elevator.hasDestinationsAbove()) {
+            System.out.println("Elevator " + elevator.getId() + " starting UP from floor " + elevator.getCurrentFloor());
+            elevator.setCurrentDirection(Direction.UP);
             elevator.setState(new MovingUpState());
-        } else if (nextReq.getSourceFloor() < elevator.getCurrentFloor()) {
-            System.out.println("Elevator " + elevator.getId() + " starting DOWN.");
+        } else if (elevator.hasDestinationsBelow()) {
+            System.out.println("Elevator " + elevator.getId() + " starting DOWN from floor " + elevator.getCurrentFloor());
+            elevator.setCurrentDirection(Direction.DOWN);
             elevator.setState(new MovingDownState());
         } else {
-            System.out.println("Elevator " + elevator.getId() + " opening doors at current floor.");
-            elevator.getPendingRequests().remove(0); // Served
+            // All requests are at current floor and handled
+            elevator.setCurrentDirection(Direction.IDLE);
         }
     }
 

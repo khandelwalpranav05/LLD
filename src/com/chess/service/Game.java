@@ -89,6 +89,9 @@ public class Game {
             } else {
                 System.out.println("CHECK!");
             }
+        } else if (isStalemate(opponent)) {
+            status = GameStatus.STALEMATE;
+            System.out.println("STALEMATE! Game is a draw.");
         }
         
         // Switch turn
@@ -114,10 +117,80 @@ public class Game {
         return board.isSquareUnderAttack(kingCell.getRow(), kingCell.getCol(), color.opposite());
     }
     
+    /**
+     * Checkmate: King is in check AND no legal move can get out of check.
+     * We try every possible move for the player and see if any escapes check.
+     */
     public boolean isCheckmate(Color color) {
-        // Simplified: If in check and king can't move, it's checkmate
-        // Full implementation would check all possible moves
-        return isInCheck(color); // Placeholder
+        if (!isInCheck(color)) {
+            return false; // Can't be checkmate if not in check
+        }
+        return !hasAnyLegalMove(color);
+    }
+    
+    /**
+     * Stalemate: King is NOT in check but no legal moves exist.
+     */
+    public boolean isStalemate(Color color) {
+        if (isInCheck(color)) {
+            return false; // If in check, it's not stalemate
+        }
+        return !hasAnyLegalMove(color);
+    }
+    
+    /**
+     * Check if the player has any legal move available.
+     * A legal move is one that:
+     * 1. Is valid according to piece movement rules
+     * 2. Doesn't leave the king in check
+     */
+    private boolean hasAnyLegalMove(Color color) {
+        // Try every piece of this color
+        for (int row = 0; row < Board.SIZE; row++) {
+            for (int col = 0; col < Board.SIZE; col++) {
+                Cell startCell = board.getCell(row, col);
+                Piece piece = startCell.getPiece();
+                
+                if (piece == null || piece.getColor() != color) {
+                    continue;
+                }
+                
+                // Try every possible destination
+                for (int endRow = 0; endRow < Board.SIZE; endRow++) {
+                    for (int endCol = 0; endCol < Board.SIZE; endCol++) {
+                        Cell endCell = board.getCell(endRow, endCol);
+                        
+                        // Skip if can't move there
+                        if (!piece.canMove(board, startCell, endCell)) {
+                            continue;
+                        }
+                        
+                        // Skip if capturing own piece
+                        if (endCell.getPiece() != null && 
+                            endCell.getPiece().getColor() == color) {
+                            continue;
+                        }
+                        
+                        // Try the move
+                        Move testMove = new Move(piece, startCell, endCell);
+                        testMove.execute(board);
+                        
+                        boolean stillInCheck = isInCheck(color);
+                        
+                        // Undo the test move
+                        testMove.undo(board);
+                        
+                        if (!stillInCheck) {
+                            // Found a legal move that escapes check!
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // No legal moves found
+        return false;
     }
     
     public GameStatus getStatus() { return status; }

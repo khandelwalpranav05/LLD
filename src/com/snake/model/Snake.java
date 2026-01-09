@@ -76,26 +76,21 @@ public class Snake {
      * @return true if crash, false if safe
      */
     public boolean checkCrash(Cell nextHead, boolean isGrowing) {
-        // If the cell is NOT in the body at all, it's definitely safe
+        // Step 1: Not in body at all = definitely safe
         if (!bodySet.contains(nextHead)) {
             return false;
         }
 
-        // It IS in the body.
-        // If we are growing, the tail stays put. So hitting ANY body part (including tail) is a crash.
-        if (isGrowing) {
-            return true;
-        }
-
-        // If we are NOT growing, the tail will move away this turn.
-        // So checking against the CURRENT tail is a false positive.
-        // We are safe if the collision is ONLY with the current tail.
+        // Step 2: It's in the body. Is it the TAIL? (The special case)
         Cell currentTail = body.peekLast();
         if (nextHead.equals(currentTail)) {
-            return false; // Safe: we are chasing our tail
+            // Tail is special: behavior depends on whether snake is growing
+            // - Growing: tail STAYS in place = crash
+            // - Not growing: tail VACATES this cell = safe (we're chasing our tail)
+            return isGrowing;
         }
-        
-        // Collided with body part that is NOT the tail (e.g. neck, middle)
+
+        // Step 3: Hitting any OTHER body part (neck, middle) = always crash
         return true;
     }
     

@@ -1,33 +1,36 @@
 package com.snakeladder;
 
-import com.snakeladder.model.Board;
-import com.snakeladder.model.Player;
+import com.snakeladder.factory.GameConfig;
+import com.snakeladder.factory.GameFactory;
 import com.snakeladder.service.Game;
-import com.snakeladder.strategy.NormalDiceStrategy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SnakeLadderDemo {
     public static void main(String[] args) {
-        // 1. Setup Board
-        Board board = new Board(100);
+        // ==================== OPTION 1: Use Preset (Recommended) ====================
+        // One line! All complexity hidden in factory.
+        Game game = GameFactory.createClassicGame(List.of("Alice", "Bob"));
         
-        // Add Snakes (Down)
-        board.addJump(99, 10);
-        board.addJump(50, 5);
+        // Other presets available:
+        // Game easyGame = GameFactory.createEasyGame(List.of("Alice", "Bob"));
+        // Game hardGame = GameFactory.createHardGame(List.of("Alice", "Bob"));
         
-        // Add Ladders (Up)
-        board.addJump(2, 25);
-        board.addJump(40, 89);
-
-        // 2. Setup Players
-        List<Player> players = new ArrayList<>();
-        players.add(new Player("Alice"));
-        players.add(new Player("Bob"));
-
-        // 3. Start Game (Simulating Server Requests)
-        Game game = new Game(board, players, new NormalDiceStrategy());
+        // ==================== OPTION 2: Custom Configuration ====================
+        // For when you need full control, but still validated and clean
+        /*
+        GameConfig config = new GameConfig.Builder()
+                .boardSize(100)
+                .addPlayers("Alice", "Bob", "Charlie")
+                .addSnake(99, 10)    // Builder validates: head > tail
+                .addSnake(50, 5)
+                .addLadder(2, 25)    // Builder validates: bottom < top
+                .addLadder(40, 89)
+                .build();
+        
+        Game game = GameFactory.createCustomGame(config);
+        */
+        
         System.out.println("Game Created. Waiting for requests...");
 
         // Simulate a Client sending requests
